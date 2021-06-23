@@ -22,7 +22,7 @@ public class Todo_Repo {
     }
 
     public void update(Entity_Todo entity_todo) {
-
+        new update(todo_dao).execute(entity_todo);
     }
 
     public void deleteall() {
@@ -57,6 +57,20 @@ public class Todo_Repo {
         @Override
         protected Void doInBackground(Void... voids) {
             todo_dao.deleteall();
+            return null;
+        }
+    }
+
+    private static class update extends AsyncTask<Entity_Todo, Void, Void> {
+        private Todo_Dao todo_dao;
+
+        private update(Todo_Dao todo_dao) {
+            this.todo_dao = todo_dao;
+        }
+
+        @Override
+        protected Void doInBackground(Entity_Todo... entity_todos) {
+            todo_dao.update(entity_todos[0]);
             return null;
         }
     }

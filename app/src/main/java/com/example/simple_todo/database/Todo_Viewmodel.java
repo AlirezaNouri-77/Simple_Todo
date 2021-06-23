@@ -29,8 +29,13 @@ public class Todo_Viewmodel extends AndroidViewModel {
     public void deleteall() {
         todo_repo.deleteall();
     }
+    public void update(Entity_Todo entity_todo) {
+        todo_repo.update(entity_todo);
+    }
 
     public LiveData<List<Entity_Todo>> getAlltodo() {
         return alltodo;
     }
+
+
 }

@@ -3,23 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_margin="5dp"
-    android:elevation="6dp"
-    app:cardCornerRadius="6dp">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    android:id="@+id/CV"
+    android:elevation="7dp"
+    app:cardCornerRadius="10dp">
 
         <TextView
             android:id="@+id/todo"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:background="@android:color/transparent"
             android:padding="10dp"
             android:text="This is Test"
             android:textSize="28sp" />
-    </LinearLayout>
-
 
 </androidx.cardview.widget.CardView>
