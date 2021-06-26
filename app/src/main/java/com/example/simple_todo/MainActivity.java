@@ -1,11 +1,15 @@
 package com.example.simple_todo;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -14,6 +18,8 @@ import com.example.simple_todo.Adapter.todo_recyclerview;
 import com.example.simple_todo.database.Entity_Todo;
 import com.example.simple_todo.database.Todo_Viewmodel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +54,24 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
             }
         });
 
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0 , ItemTouchHelper.LEFT  ) {
+            @Override
+            public boolean onMove(@NonNull @NotNull RecyclerView recyclerView, @NonNull @NotNull RecyclerView.ViewHolder viewHolder, @NonNull @NotNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull @NotNull RecyclerView.ViewHolder viewHolder, int direction) {
+                list = adapter.getList();
+                Entity_Todo entity_todo = list.get(viewHolder.getAdapterPosition());
+                entity_todo.setIsfinish(true);
+                todo_viewmodel.update(entity_todo);
+                adapter.notifyItemChanged(viewHolder.getAdapterPosition());
+
+            }
+
+        }).attachToRecyclerView(recyclerView);
+
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,16 +95,16 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
     @Override
     public void onclick(int postion) {
 
-        list = adapter.getList();
-        Entity_Todo entity_todo = list.get(postion);
-
-        if (!entity_todo.isIsfinish()){
-            entity_todo.setIsfinish(true);
-            todo_viewmodel.update(entity_todo);
-        }else {
-            entity_todo.setIsfinish(false);
-            todo_viewmodel.update(entity_todo);
-        }
+//        list = adapter.getList();
+//        Entity_Todo entity_todo = list.get(postion);
+//
+//        if (!entity_todo.isIsfinish()){
+//            entity_todo.setIsfinish(true);
+//            todo_viewmodel.update(entity_todo);
+//        }else {
+//            entity_todo.setIsfinish(false);
+//            todo_viewmodel.update(entity_todo);
+//        }
 
 
     }

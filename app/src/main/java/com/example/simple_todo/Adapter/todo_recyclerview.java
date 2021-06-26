@@ -4,8 +4,10 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,6 +23,7 @@ import java.util.List;
 public class todo_recyclerview extends RecyclerView.Adapter<todo_recyclerview.todo_viewholder> {
 
     Onitemclick onitemclick;
+
     public todo_recyclerview(Onitemclick onitemclick) {
         this.onitemclick = onitemclick;
     }
@@ -33,7 +36,7 @@ public class todo_recyclerview extends RecyclerView.Adapter<todo_recyclerview.to
     public todo_viewholder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_layout, parent, false);
 
-        return new todo_viewholder(view , onitemclick);
+        return new todo_viewholder(view, onitemclick);
     }
 
     @Override
@@ -41,10 +44,14 @@ public class todo_recyclerview extends RecyclerView.Adapter<todo_recyclerview.to
         Entity_Todo entity_todo = list.get(position);
         holder.todo.setText(entity_todo.getTodo());
 
-        if (entity_todo.isIsfinish()){
-            holder.cardView.setBackgroundColor(Color.parseColor("#81c784"));
-        }else {
-            holder.cardView.setBackgroundColor(Color.parseColor("#f44336"));
+        if (!entity_todo.isIsfinish()) {
+            holder.imageView.setBackgroundColor(Color.parseColor("#e53935"));
+            holder.imageView.setImageResource(R.drawable.ic_twotone_close_24);
+            holder.doneornot.setText("Not Done");
+        } else {
+            holder.imageView.setBackgroundColor(Color.parseColor("#4caf50"));
+            holder.imageView.setImageResource(R.drawable.ic_twotone_done_24);
+            holder.doneornot.setText("Done");
         }
 
     }
@@ -64,14 +71,17 @@ public class todo_recyclerview extends RecyclerView.Adapter<todo_recyclerview.to
     }
 
     public class todo_viewholder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private TextView todo;
-        private CardView cardView;
+        private final TextView todo;
+        private final TextView doneornot;
+        private final ImageView imageView;
         Onitemclick onitemclick;
 
         public todo_viewholder(@NonNull @NotNull View itemView, Onitemclick onitemclick) {
             super(itemView);
             todo = itemView.findViewById(R.id.todo);
-            cardView = itemView.findViewById(R.id.CV);
+            doneornot = itemView.findViewById(R.id.textView);
+            CardView cardView = itemView.findViewById(R.id.CV);
+            imageView = itemView.findViewById(R.id.imageView4);
             this.onitemclick = onitemclick;
 
             itemView.setOnClickListener(this);
