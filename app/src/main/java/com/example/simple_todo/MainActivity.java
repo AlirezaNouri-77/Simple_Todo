@@ -43,18 +43,18 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
         FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-         adapter = new todo_recyclerview(this);
+        adapter = new todo_recyclerview(this);
 
         recyclerView.setAdapter(adapter);
 
         todo_viewmodel.getAlltodo().observe(this, new Observer<List<Entity_Todo>>() {
             @Override
             public void onChanged(List<Entity_Todo> list) {
-                adapter.settodo(list);
+                adapter.submitList(list);
             }
         });
 
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0 , ItemTouchHelper.LEFT  ) {
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(@NonNull @NotNull RecyclerView recyclerView, @NonNull @NotNull RecyclerView.ViewHolder viewHolder, @NonNull @NotNull RecyclerView.ViewHolder target) {
                 return false;
@@ -62,12 +62,28 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
 
             @Override
             public void onSwiped(@NonNull @NotNull RecyclerView.ViewHolder viewHolder, int direction) {
-                list = adapter.getList();
+                list = adapter.getCurrentList();
                 Entity_Todo entity_todo = list.get(viewHolder.getAdapterPosition());
-                entity_todo.setIsfinish(true);
-                todo_viewmodel.update(entity_todo);
-                adapter.notifyItemChanged(viewHolder.getAdapterPosition());
 
+                switch (direction) {
+                    case ItemTouchHelper.RIGHT:
+                        if (!entity_todo.isIsfinish()) {
+                            entity_todo.setIsfinish(true);
+                            todo_viewmodel.update(entity_todo);
+                            adapter.notifyItemChanged(viewHolder.getAdapterPosition());
+                        } else {
+                            entity_todo.setIsfinish(false);
+                            todo_viewmodel.update(entity_todo);
+                            adapter.notifyItemChanged(viewHolder.getAdapterPosition());
+                        }
+                        break;
+
+                    case ItemTouchHelper.LEFT:
+                        todo_viewmodel.delete(entity_todo);
+                        adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+                        break;
+
+                }
             }
 
         }).attachToRecyclerView(recyclerView);

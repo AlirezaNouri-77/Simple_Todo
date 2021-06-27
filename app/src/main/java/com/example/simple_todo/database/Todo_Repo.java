@@ -29,6 +29,10 @@ public class Todo_Repo {
         new deleteall(todo_dao).execute();
     }
 
+    public void deleteitem(Entity_Todo entity_todo) {
+        new deleteitem(todo_dao).execute(entity_todo);
+    }
+
     public LiveData<List<Entity_Todo>> getall() {
         return alltodo;
     }
@@ -71,6 +75,20 @@ public class Todo_Repo {
         @Override
         protected Void doInBackground(Entity_Todo... entity_todos) {
             todo_dao.update(entity_todos[0]);
+            return null;
+        }
+    }
+
+    private static class deleteitem extends AsyncTask<Entity_Todo, Void, Void> {
+        private Todo_Dao todo_dao;
+
+        private deleteitem(Todo_Dao todo_dao) {
+            this.todo_dao = todo_dao;
+        }
+
+        @Override
+        protected Void doInBackground(Entity_Todo... entity_todos) {
+            todo_dao.delete(entity_todos[0]);
             return null;
         }
     }
