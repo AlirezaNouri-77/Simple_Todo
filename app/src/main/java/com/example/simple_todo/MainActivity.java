@@ -8,10 +8,16 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.text.Layout;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.simple_todo.Adapter.todo_recyclerview;
@@ -30,11 +36,25 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
     todo_recyclerview adapter;
     private List<Entity_Todo> list = new ArrayList<>();
 
+    Dialog dialog;
+    Button button;
+    EditText add;
+    TextView textView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        dialog = new Dialog(this);
+
+        dialog.setContentView(R.layout.add_dialog);
+        add = dialog.findViewById(R.id.editTextTextPersonName);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        textView = dialog.findViewById(R.id.textView3);
+        button = dialog.findViewById(R.id.button);
+
 
         todo_viewmodel = new ViewModelProvider(this).get(Todo_Viewmodel.class);
 
@@ -88,14 +108,24 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
 
         }).attachToRecyclerView(recyclerView);
 
-
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Entity_Todo entity_todo = new Entity_Todo();
-                entity_todo.setTodo("This is Test 1");
-                entity_todo.setIsfinish(false);
-                todo_viewmodel.insert(entity_todo);
+
+                textView.setText("Add Todo");
+                dialog.show();
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!add.getText().toString().isEmpty()) {
+                            Entity_Todo entity_todo = new Entity_Todo();
+                            String todo = add.getText().toString();
+                            entity_todo.setTodo(todo);
+                            entity_todo.setIsfinish(false);
+                            todo_viewmodel.insert(entity_todo);
+                        }
+                    }
+                });
             }
         });
         floatingActionButton.setOnLongClickListener(new View.OnLongClickListener() {
@@ -111,17 +141,19 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
     @Override
     public void onclick(int postion) {
 
-//        list = adapter.getList();
-//        Entity_Todo entity_todo = list.get(postion);
-//
-//        if (!entity_todo.isIsfinish()){
-//            entity_todo.setIsfinish(true);
-//            todo_viewmodel.update(entity_todo);
-//        }else {
-//            entity_todo.setIsfinish(false);
-//            todo_viewmodel.update(entity_todo);
-//        }
+        list = adapter.getCurrentList();
+        Entity_Todo entity_todo = list.get(postion);
+        textView.setText("Update Todo");
+        dialog.show();
 
-
+        add.setText(entity_todo.getTodo());
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                entity_todo.setTodo(add.getText().toString());
+                todo_viewmodel.update(entity_todo);
+                adapter.notifyItemChanged(postion);
+            }
+        });
     }
 }

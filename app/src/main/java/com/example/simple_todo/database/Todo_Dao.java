@@ -12,7 +12,6 @@ import java.util.List;
 @Dao
 public interface Todo_Dao {
 
-
     @Update
     void update (Entity_Todo entity_todo);
 
@@ -25,8 +24,7 @@ public interface Todo_Dao {
     @Query("DELETE FROM todo_table")
     void deleteall();
 
-    @Query("SELECT * FROM todo_table")
+    @Query("SELECT * FROM todo_table ORDER BY isfinish ASC")
     LiveData<List<Entity_Todo>> getall();
-
 
 }
