@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
                 Entity_Todo entity_todo = list.get(viewHolder.getAdapterPosition());
 
                 switch (direction) {
+
                     case ItemTouchHelper.RIGHT:
                         if (!entity_todo.isIsfinish()) {
                             entity_todo.setIsfinish(true);
@@ -100,12 +101,10 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
 
                     case ItemTouchHelper.LEFT:
                         todo_viewmodel.delete(entity_todo);
-                        adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
                         break;
 
                 }
             }
-
         }).attachToRecyclerView(recyclerView);
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -128,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
                 });
             }
         });
+
         floatingActionButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -145,7 +145,6 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
         Entity_Todo entity_todo = list.get(postion);
         textView.setText("Update Todo");
         dialog.show();
-
         add.setText(entity_todo.getTodo());
         button.setOnClickListener(new View.OnClickListener() {
             @Override
