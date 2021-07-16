@@ -15,7 +15,6 @@ public class Todo_Viewmodel extends AndroidViewModel {
     private final Todo_Repo todo_repo;
     private final LiveData<List<Entity_Todo>> alltodo;
 
-
     public Todo_Viewmodel(@NonNull @NotNull Application application) {
         super(application);
         todo_repo = new Todo_Repo(application);
@@ -41,6 +40,5 @@ public class Todo_Viewmodel extends AndroidViewModel {
     public LiveData<List<Entity_Todo>> getAlltodo() {
         return alltodo;
     }
-
 
 }

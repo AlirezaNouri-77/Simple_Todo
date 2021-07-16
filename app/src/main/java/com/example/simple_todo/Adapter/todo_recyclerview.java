@@ -22,18 +22,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class todo_recyclerview extends ListAdapter<Entity_Todo , todo_recyclerview.todo_viewholder> {
+public class todo_recyclerview extends ListAdapter<Entity_Todo, todo_recyclerview.todo_viewholder> {
 
-    Onitemclick onitemclick;
+    private Onitemclick onitemclick;
 
-//    public todo_recyclerview(Onitemclick onitemclick) {
-//        super();
-//        this.onitemclick = onitemclick;
-//    }
-
-  //      private List<Entity_Todo> list = new ArrayList<>();
-
-    public todo_recyclerview(Onitemclick onitemclick ) {
+    public todo_recyclerview(Onitemclick onitemclick) {
         super(diffCallback);
         this.onitemclick = onitemclick;
     }
@@ -46,7 +39,7 @@ public class todo_recyclerview extends ListAdapter<Entity_Todo , todo_recyclervi
 
         @Override
         public boolean areContentsTheSame(@NonNull @NotNull Entity_Todo oldItem, @NonNull @NotNull Entity_Todo newItem) {
-            return oldItem.getTodo().equals(newItem.getTodo()) && oldItem.isIsfinish()==newItem.isIsfinish();
+            return oldItem.getTodo().equals(newItem.getTodo()) && oldItem.isIsfinish() == newItem.isIsfinish();
         }
     };
 
@@ -74,22 +67,7 @@ public class todo_recyclerview extends ListAdapter<Entity_Todo , todo_recyclervi
             holder.imageView.setImageResource(R.drawable.ic_twotone_done_24);
             holder.doneornot.setText("Done");
         }
-
     }
-
-//    @Override
-//    public int getItemCount() {
-//        return list.size();
-//    }
-//
-//    public void settodo(List<Entity_Todo> list) {
-//        this.list = list;
-//        notifyDataSetChanged();
-//    }
-//
-//    public List<Entity_Todo> getList() {
-//        return getList();
-//    }
 
     public static class todo_viewholder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView todo;

@@ -9,10 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
-import android.graphics.Canvas;
-import android.graphics.Paint;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.text.Layout;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -35,9 +34,11 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
     private Todo_Viewmodel todo_viewmodel;
     todo_recyclerview adapter;
     private List<Entity_Todo> list = new ArrayList<>();
+    private List<Entity_Todo> check = new ArrayList<>();
+
 
     Dialog dialog;
-    Button button;
+    Button dialog_button;
     EditText add;
     TextView textView;
 
@@ -47,13 +48,16 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         dialog = new Dialog(this);
 
         dialog.setContentView(R.layout.add_dialog);
         add = dialog.findViewById(R.id.editTextTextPersonName);
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
         textView = dialog.findViewById(R.id.textView3);
-        button = dialog.findViewById(R.id.button);
+        dialog_button = dialog.findViewById(R.id.button);
 
 
         todo_viewmodel = new ViewModelProvider(this).get(Todo_Viewmodel.class);
@@ -86,7 +90,6 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
                 Entity_Todo entity_todo = list.get(viewHolder.getAdapterPosition());
 
                 switch (direction) {
-
                     case ItemTouchHelper.RIGHT:
                         if (!entity_todo.isIsfinish()) {
                             entity_todo.setIsfinish(true);
@@ -110,10 +113,10 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 textView.setText("Add Todo");
+                dialog_button.setText("Add");
                 dialog.show();
-                button.setOnClickListener(new View.OnClickListener() {
+                dialog_button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (!add.getText().toString().isEmpty()) {
@@ -127,15 +130,6 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
                 });
             }
         });
-
-        floatingActionButton.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                todo_viewmodel.deleteall();
-                return false;
-            }
-        });
-
     }
 
     @Override
@@ -146,12 +140,14 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
         textView.setText("Update Todo");
         dialog.show();
         add.setText(entity_todo.getTodo());
-        button.setOnClickListener(new View.OnClickListener() {
+        dialog_button.setText("Update");
+        dialog_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 entity_todo.setTodo(add.getText().toString());
                 todo_viewmodel.update(entity_todo);
                 adapter.notifyItemChanged(postion);
+                dialog.cancel();
             }
         });
     }

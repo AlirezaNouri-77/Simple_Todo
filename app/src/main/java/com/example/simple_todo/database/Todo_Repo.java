@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 import java.util.List;
 
 public class Todo_Repo {
+
     private Todo_Dao todo_dao;
     private LiveData<List<Entity_Todo>> alltodo;
 
@@ -92,5 +93,4 @@ public class Todo_Repo {
             return null;
         }
     }
-
 }
