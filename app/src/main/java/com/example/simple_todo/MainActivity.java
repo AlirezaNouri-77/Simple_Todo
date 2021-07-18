@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.simple_todo.Adapter.todo_recyclerview;
 import com.example.simple_todo.database.Entity_Todo;
@@ -32,15 +31,16 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements todo_recyclerview.Onitemclick {
 
     private Todo_Viewmodel todo_viewmodel;
-    todo_recyclerview adapter;
-    private List<Entity_Todo> list = new ArrayList<>();
+    private todo_recyclerview adapter;
+    private RecyclerView recyclerView;
+    private List<Entity_Todo> list_entity = new ArrayList<>();
     private List<Entity_Todo> check = new ArrayList<>();
-
 
     Dialog dialog;
     Button dialog_button;
     EditText add;
     TextView textView;
+    TextView empty;
 
 
     @Override
@@ -48,6 +48,9 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        empty = findViewById(R.id.textView2);
+        recyclerView = findViewById(R.id.RV);
+        FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
 
         dialog = new Dialog(this);
 
@@ -59,21 +62,28 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
         textView = dialog.findViewById(R.id.textView3);
         dialog_button = dialog.findViewById(R.id.button);
 
-
         todo_viewmodel = new ViewModelProvider(this).get(Todo_Viewmodel.class);
 
-
-        RecyclerView recyclerView = findViewById(R.id.RV);
-        FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         adapter = new todo_recyclerview(this);
 
         recyclerView.setAdapter(adapter);
 
+
+
         todo_viewmodel.getAlltodo().observe(this, new Observer<List<Entity_Todo>>() {
             @Override
             public void onChanged(List<Entity_Todo> list) {
+
+                if (list.size()==0) {
+                    empty.setText("List is Empty");
+                    recyclerView.setVisibility(View.GONE);
+                    empty.setVisibility(View.VISIBLE);
+                }else {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    empty.setVisibility(View.GONE);
+                }
                 adapter.submitList(list);
             }
         });
@@ -86,8 +96,8 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
 
             @Override
             public void onSwiped(@NonNull @NotNull RecyclerView.ViewHolder viewHolder, int direction) {
-                list = adapter.getCurrentList();
-                Entity_Todo entity_todo = list.get(viewHolder.getAdapterPosition());
+                list_entity = adapter.getCurrentList();
+                Entity_Todo entity_todo = list_entity.get(viewHolder.getAdapterPosition());
 
                 switch (direction) {
                     case ItemTouchHelper.RIGHT:
@@ -109,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
                 }
             }
         }).attachToRecyclerView(recyclerView);
+
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,8 +146,9 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
     @Override
     public void onclick(int postion) {
 
-        list = adapter.getCurrentList();
-        Entity_Todo entity_todo = list.get(postion);
+        list_entity = adapter.getCurrentList();
+        Entity_Todo entity_todo = list_entity.get(postion);
+
         textView.setText("Update Todo");
         dialog.show();
         add.setText(entity_todo.getTodo());
@@ -151,4 +163,5 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
             }
         });
     }
+
 }
