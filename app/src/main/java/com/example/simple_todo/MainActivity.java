@@ -8,10 +8,15 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -34,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
     private todo_recyclerview adapter;
     private RecyclerView recyclerView;
     private List<Entity_Todo> list_entity = new ArrayList<>();
-    private List<Entity_Todo> check = new ArrayList<>();
 
     Dialog dialog;
     Button dialog_button;
@@ -71,16 +75,15 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
         recyclerView.setAdapter(adapter);
 
 
-
         todo_viewmodel.getAlltodo().observe(this, new Observer<List<Entity_Todo>>() {
             @Override
             public void onChanged(List<Entity_Todo> list) {
 
-                if (list.size()==0) {
+                if (list.size() == 0) {
                     empty.setText("List is Empty");
                     recyclerView.setVisibility(View.GONE);
                     empty.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     recyclerView.setVisibility(View.VISIBLE);
                     empty.setVisibility(View.GONE);
                 }
@@ -141,6 +144,37 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
                 });
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.deleteall:
+                AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+                alertDialog.setTitle("Attention");
+                alertDialog.setMessage("Are you sure for delete all Todo");
+                alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        todo_viewmodel.deleteall();
+                    }
+                });
+                alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        alertDialog.dismiss();
+                    }
+                });
+                alertDialog.show();
+                break;
+        }
+        return true;
     }
 
     @Override
