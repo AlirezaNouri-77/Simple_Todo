@@ -6,6 +6,8 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import com.example.simple_todo.model.Entity_Todo;
+
 @Database(entities = Entity_Todo.class, version = 1)
 public abstract class Room_Database extends RoomDatabase {
 

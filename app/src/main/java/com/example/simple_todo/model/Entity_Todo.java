@@ -1,4 +1,4 @@
-package com.example.simple_todo.database;
+package com.example.simple_todo.model;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;

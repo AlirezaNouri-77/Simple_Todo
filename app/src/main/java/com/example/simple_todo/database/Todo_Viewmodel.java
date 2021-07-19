@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.example.simple_todo.model.Entity_Todo;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -35,6 +37,10 @@ public class Todo_Viewmodel extends AndroidViewModel {
 
     public void delete(Entity_Todo entity_todo) {
         todo_repo.deleteitem(entity_todo);
+    }
+
+    public LiveData<List<Entity_Todo>> searchitem (String text){
+        return todo_repo.searchitem(text);
     }
 
     public LiveData<List<Entity_Todo>> getAlltodo() {

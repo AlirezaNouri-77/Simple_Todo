@@ -18,10 +18,9 @@
             android:id="@+id/todo"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginRight="4dp"
-            android:background="#FFFFFF"
+            android:layout_marginRight="2dp"
             android:gravity="center"
-            android:padding="10dp"
+            android:padding="8dp"
             android:text="This is Test"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -35,28 +34,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.80" />
+            app:layout_constraintGuide_percent="0.90" />
 
         <ImageView
             android:id="@+id/imageView4"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:padding="12dp"
+            android:padding="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline4"
             app:layout_constraintTop_toTopOf="parent"/>
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Done"
-            android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/imageView4"
-            app:layout_constraintStart_toStartOf="@+id/guideline4" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

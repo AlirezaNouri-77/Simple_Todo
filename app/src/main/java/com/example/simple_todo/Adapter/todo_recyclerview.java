@@ -7,20 +7,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.simple_todo.R;
-import com.example.simple_todo.database.Entity_Todo;
+import com.example.simple_todo.model.Entity_Todo;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class todo_recyclerview extends ListAdapter<Entity_Todo, todo_recyclerview.todo_viewholder> {
 
@@ -61,24 +56,20 @@ public class todo_recyclerview extends ListAdapter<Entity_Todo, todo_recyclervie
         if (!entity_todo.isIsfinish()) {
             holder.imageView.setBackgroundColor(Color.parseColor("#e53935"));
             holder.imageView.setImageResource(R.drawable.ic_twotone_close_24);
-            holder.doneornot.setText("Not Done");
         } else {
             holder.imageView.setBackgroundColor(Color.parseColor("#4caf50"));
             holder.imageView.setImageResource(R.drawable.ic_twotone_done_24);
-            holder.doneornot.setText("Done");
         }
     }
 
     public static class todo_viewholder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView todo;
-        private final TextView doneornot;
         private final ImageView imageView;
         Onitemclick onitemclick;
 
         public todo_viewholder(@NonNull @NotNull View itemView, Onitemclick onitemclick) {
             super(itemView);
             todo = itemView.findViewById(R.id.todo);
-            doneornot = itemView.findViewById(R.id.textView);
             imageView = itemView.findViewById(R.id.imageView4);
             this.onitemclick = onitemclick;
 

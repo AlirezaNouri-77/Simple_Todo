@@ -2,6 +2,7 @@ package com.example.simple_todo;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -9,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -24,7 +24,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.simple_todo.Adapter.todo_recyclerview;
-import com.example.simple_todo.database.Entity_Todo;
+import com.example.simple_todo.model.Entity_Todo;
 import com.example.simple_todo.database.Todo_Viewmodel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
 
         empty = findViewById(R.id.textView2);
         recyclerView = findViewById(R.id.RV);
+
         FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
 
         dialog = new Dialog(this);
@@ -74,11 +75,11 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
 
         recyclerView.setAdapter(adapter);
 
-
         todo_viewmodel.getAlltodo().observe(this, new Observer<List<Entity_Todo>>() {
             @Override
             public void onChanged(List<Entity_Todo> list) {
 
+                adapter.submitList(list);
                 if (list.size() == 0) {
                     empty.setText("List is Empty");
                     recyclerView.setVisibility(View.GONE);
@@ -87,7 +88,6 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
                     recyclerView.setVisibility(View.VISIBLE);
                     empty.setVisibility(View.GONE);
                 }
-                adapter.submitList(list);
             }
         });
 
@@ -118,7 +118,6 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
                     case ItemTouchHelper.LEFT:
                         todo_viewmodel.delete(entity_todo);
                         break;
-
                 }
             }
         }).attachToRecyclerView(recyclerView);
@@ -149,30 +148,45 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
+        MenuItem menuItem = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) menuItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                getitem(newText);
+                return true;
+            }
+        });
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.deleteall:
-                AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-                alertDialog.setTitle("Attention");
-                alertDialog.setMessage("Are you sure for delete all Todo");
-                alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        todo_viewmodel.deleteall();
-                    }
-                });
-                alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        alertDialog.dismiss();
-                    }
-                });
-                alertDialog.show();
-                break;
+
+
+        if (item.getItemId() == R.id.deleteall) {
+            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+            alertDialog.setTitle("Attention");
+            alertDialog.setMessage("Are you sure for delete all Todo");
+            alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    todo_viewmodel.deleteall();
+                }
+            });
+            alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    alertDialog.dismiss();
+                }
+            });
+
+            alertDialog.show();
         }
         return true;
     }
@@ -198,4 +212,13 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
         });
     }
 
+    public void getitem ( String newtext ){
+        String search_input = "%"+newtext+"%";
+        todo_viewmodel.searchitem(search_input).observe(this, new Observer<List<Entity_Todo>>() {
+            @Override
+            public void onChanged(List<Entity_Todo> list) {
+                adapter.submitList(list);
+            }
+        });
+    }
 }

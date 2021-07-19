@@ -7,6 +7,8 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.example.simple_todo.model.Entity_Todo;
+
 import java.util.List;
 
 @Dao
@@ -26,5 +28,8 @@ public interface Todo_Dao {
 
     @Query("SELECT * FROM todo_table ORDER BY isfinish ASC")
     LiveData<List<Entity_Todo>> getall();
+
+    @Query("SELECT * FROM todo_table WHERE todo LIKE :text ")
+    LiveData<List<Entity_Todo>> search(String text);
 
 }

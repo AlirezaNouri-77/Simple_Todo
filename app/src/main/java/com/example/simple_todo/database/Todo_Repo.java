@@ -3,20 +3,29 @@ package com.example.simple_todo.database;
 import android.app.Application;
 import android.os.AsyncTask;
 
+import androidx.annotation.WorkerThread;
 import androidx.lifecycle.LiveData;
+
+import com.example.simple_todo.model.Entity_Todo;
 
 import java.util.List;
 
 public class Todo_Repo {
 
-    private Todo_Dao todo_dao;
-    private LiveData<List<Entity_Todo>> alltodo;
+    private final Todo_Dao todo_dao;
+    private final LiveData<List<Entity_Todo>> alltodo;
 
     public Todo_Repo(Application application) {
         Room_Database room_database = Room_Database.getInstance(application);
         todo_dao = room_database.todo_dao();
         alltodo = todo_dao.getall();
     }
+
+    @WorkerThread
+    public LiveData<List<Entity_Todo>> searchitem (String text){
+        return todo_dao.search(text);
+    }
+
 
     public void insert(Entity_Todo entity_todo) {
         new inserttodo(todo_dao).execute(entity_todo);
@@ -39,7 +48,7 @@ public class Todo_Repo {
     }
 
     private static class inserttodo extends AsyncTask<Entity_Todo, Void, Void> {
-        private Todo_Dao todo_dao;
+        private final Todo_Dao todo_dao;
 
         private inserttodo(Todo_Dao todo_dao) {
             this.todo_dao = todo_dao;
@@ -53,7 +62,7 @@ public class Todo_Repo {
     }
 
     private static class deleteall extends AsyncTask<Void, Void, Void> {
-        private Todo_Dao todo_dao;
+        private final Todo_Dao todo_dao;
 
         private deleteall(Todo_Dao todo_dao) {
             this.todo_dao = todo_dao;
@@ -67,7 +76,7 @@ public class Todo_Repo {
     }
 
     private static class update extends AsyncTask<Entity_Todo, Void, Void> {
-        private Todo_Dao todo_dao;
+        private final Todo_Dao todo_dao;
 
         private update(Todo_Dao todo_dao) {
             this.todo_dao = todo_dao;
@@ -81,7 +90,7 @@ public class Todo_Repo {
     }
 
     private static class deleteitem extends AsyncTask<Entity_Todo, Void, Void> {
-        private Todo_Dao todo_dao;
+        private final Todo_Dao todo_dao;
 
         private deleteitem(Todo_Dao todo_dao) {
             this.todo_dao = todo_dao;
@@ -93,4 +102,5 @@ public class Todo_Repo {
             return null;
         }
     }
+
 }
