@@ -1,4 +1,4 @@
-package com.example.simple_todo.database;
+package com.example.simple_todo.viewmodel;
 
 import android.app.Application;
 
@@ -6,7 +6,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.example.simple_todo.dao.Todo_Dao;
 import com.example.simple_todo.model.Entity_Todo;
+import com.example.simple_todo.repo.Todo_Repo;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -15,20 +17,21 @@ import java.util.List;
 public class Todo_Viewmodel extends AndroidViewModel {
 
     private final Todo_Repo todo_repo;
-    private final LiveData<List<Entity_Todo>> alltodo;
+    Todo_Dao todo_dao;
+    //private final List<Entity_Todo> alltodo;
 
     public Todo_Viewmodel(@NonNull @NotNull Application application) {
         super(application);
         todo_repo = new Todo_Repo(application);
-        alltodo = todo_repo.getall();
+      //   alltodo = todo_repo.getall();
     }
 
     public void insert(Entity_Todo entity_todo) {
         todo_repo.insert(entity_todo);
     }
 
-    public void deleteall() {
-        todo_repo.deleteall();
+    public void deleteall(String text) {
+        todo_repo.delete(text);
     }
 
     public void update(Entity_Todo entity_todo) {
@@ -43,8 +46,8 @@ public class Todo_Viewmodel extends AndroidViewModel {
         return todo_repo.searchitem(text);
     }
 
-    public LiveData<List<Entity_Todo>> getAlltodo() {
-        return alltodo;
-    }
+//    public List<Entity_Todo> getAlltodo() {
+//        return alltodo;
+//    }
 
 }

@@ -13,8 +13,20 @@ public class Entity_Todo {
     @ColumnInfo
     boolean isfinish;
 
+    @ColumnInfo
+    String Code;
+
+
     @PrimaryKey(autoGenerate = true)
     int id;
+
+    public String getCode() {
+        return Code;
+    }
+
+    public void setCode(String code) {
+        Code = code;
+    }
 
     public String getTodo() {
         return todo;

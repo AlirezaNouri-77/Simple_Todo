@@ -2,10 +2,8 @@ package com.example.simple_todo;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,62 +23,78 @@ import android.widget.TextView;
 
 import com.example.simple_todo.Adapter.todo_recyclerview;
 import com.example.simple_todo.model.Entity_Todo;
-import com.example.simple_todo.database.Todo_Viewmodel;
+import com.example.simple_todo.model.category_model;
+import com.example.simple_todo.repo.category_repo;
+import com.example.simple_todo.viewmodel.Todo_Viewmodel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements todo_recyclerview.Onitemclick {
 
-    private Todo_Viewmodel todo_viewmodel;
-    private todo_recyclerview adapter;
-    private RecyclerView recyclerView;
-    private List<Entity_Todo> list_entity = new ArrayList<>();
-
-    Dialog dialog;
+    Dialog dialog_mainactiviy;
     Button dialog_button;
     EditText add;
     TextView textView;
     TextView empty;
+    String category;
 
+    private Todo_Viewmodel todo_viewmodel;
+
+    private todo_recyclerview adapter;
+    private RecyclerView recyclerView;
+
+    category_model category_model;
+    category_repo category_repo;
+
+
+    private List<Entity_Todo> list_entity = new ArrayList<>();
+    //private List<Entity_Todo> list_entity2 = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        category_repo = new category_repo(getApplication());
+
+        category_model = getIntent().getParcelableExtra("ss");
+
+
+        TextView categorytextview = findViewById(R.id.categoty_textview);
+        categorytextview.setText(category_model.getCategory());
+
+
         empty = findViewById(R.id.textView2);
         recyclerView = findViewById(R.id.RV);
 
         FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
 
-        dialog = new Dialog(this);
+        dialog_mainactiviy = new Dialog(this);
+        dialog_mainactiviy.setContentView(R.layout.add_dialog_mainactivity);
+        add = dialog_mainactiviy.findViewById(R.id.editTextTextPersonName);
+        textView = dialog_mainactiviy.findViewById(R.id.textView3);
+        dialog_button = dialog_mainactiviy.findViewById(R.id.button);
+        dialog_mainactiviy.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog_mainactiviy.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        dialog.setContentView(R.layout.add_dialog);
-        add = dialog.findViewById(R.id.editTextTextPersonName);
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-        textView = dialog.findViewById(R.id.textView3);
-        dialog_button = dialog.findViewById(R.id.button);
 
         todo_viewmodel = new ViewModelProvider(this).get(Todo_Viewmodel.class);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         adapter = new todo_recyclerview(this);
-
         recyclerView.setAdapter(adapter);
+        recyclerView.setHasFixedSize(true);
 
-        todo_viewmodel.getAlltodo().observe(this, new Observer<List<Entity_Todo>>() {
+
+        todo_viewmodel.searchitem(category_model.getCategory()).observe(this, new Observer<List<Entity_Todo>>() {
             @Override
-            public void onChanged(List<Entity_Todo> list) {
+            public void onChanged(List<Entity_Todo> entity_todos) {
 
-                adapter.submitList(list);
-                if (list.size() == 0) {
+                adapter.submitList(entity_todos);
+
+                if (entity_todos.size() == 0) {
                     empty.setText("List is Empty");
                     recyclerView.setVisibility(View.GONE);
                     empty.setVisibility(View.VISIBLE);
@@ -91,44 +105,13 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
             }
         });
 
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(@NonNull @NotNull RecyclerView recyclerView, @NonNull @NotNull RecyclerView.ViewHolder viewHolder, @NonNull @NotNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull @NotNull RecyclerView.ViewHolder viewHolder, int direction) {
-                list_entity = adapter.getCurrentList();
-                Entity_Todo entity_todo = list_entity.get(viewHolder.getAdapterPosition());
-
-                switch (direction) {
-                    case ItemTouchHelper.RIGHT:
-                        if (!entity_todo.isIsfinish()) {
-                            entity_todo.setIsfinish(true);
-                            todo_viewmodel.update(entity_todo);
-                            adapter.notifyItemChanged(viewHolder.getAdapterPosition());
-                        } else {
-                            entity_todo.setIsfinish(false);
-                            todo_viewmodel.update(entity_todo);
-                            adapter.notifyItemChanged(viewHolder.getAdapterPosition());
-                        }
-                        break;
-
-                    case ItemTouchHelper.LEFT:
-                        todo_viewmodel.delete(entity_todo);
-                        break;
-                }
-            }
-        }).attachToRecyclerView(recyclerView);
-
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 textView.setText("Add Todo");
                 dialog_button.setText("Add");
-                dialog.show();
+                dialog_mainactiviy.show();
                 dialog_button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -137,6 +120,12 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
                             String todo = add.getText().toString();
                             entity_todo.setTodo(todo);
                             entity_todo.setIsfinish(false);
+
+                            entity_todo.setCode(category_model.getCategory());
+
+                            category_model.setQuntity(category_model.getQuntity() + 1);
+                            category_repo.update(category_model);
+
                             todo_viewmodel.insert(entity_todo);
                         }
                     }
@@ -145,29 +134,15 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
         });
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
-        MenuItem menuItem = menu.findItem(R.id.search);
-        SearchView searchView = (SearchView) menuItem.getActionView();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                getitem(newText);
-                return true;
-            }
-        });
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
 
         if (item.getItemId() == R.id.deleteall) {
             AlertDialog alertDialog = new AlertDialog.Builder(this).create();
@@ -176,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
             alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    todo_viewmodel.deleteall();
+                    todo_viewmodel.deleteall(category);
                 }
             });
             alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
@@ -185,11 +160,11 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
                     alertDialog.dismiss();
                 }
             });
-
             alertDialog.show();
         }
         return true;
     }
+
 
     @Override
     public void onclick(int postion) {
@@ -198,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
         Entity_Todo entity_todo = list_entity.get(postion);
 
         textView.setText("Update Todo");
-        dialog.show();
+        dialog_mainactiviy.show();
         add.setText(entity_todo.getTodo());
         dialog_button.setText("Update");
         dialog_button.setOnClickListener(new View.OnClickListener() {
@@ -207,18 +182,31 @@ public class MainActivity extends AppCompatActivity implements todo_recyclerview
                 entity_todo.setTodo(add.getText().toString());
                 todo_viewmodel.update(entity_todo);
                 adapter.notifyItemChanged(postion);
-                dialog.cancel();
+                dialog_mainactiviy.cancel();
             }
         });
     }
 
-    public void getitem ( String newtext ){
-        String search_input = "%"+newtext+"%";
-        todo_viewmodel.searchitem(search_input).observe(this, new Observer<List<Entity_Todo>>() {
-            @Override
-            public void onChanged(List<Entity_Todo> list) {
-                adapter.submitList(list);
-            }
-        });
+
+    @Override
+    public void delete(int postion) {
+        list_entity = adapter.getCurrentList();
+        Entity_Todo entity_todo = list_entity.get(postion);
+        category_model.setQuntity(category_model.getQuntity() - 1);
+        category_repo.update(category_model);
+        todo_viewmodel.delete(entity_todo);
     }
+
+
+    @Override
+    public void dene_or_not(int postion) {
+        list_entity = adapter.getCurrentList();
+        Entity_Todo entity_todo = list_entity.get(postion);
+        if (!entity_todo.isIsfinish()) {
+            entity_todo.setIsfinish(true);
+            todo_viewmodel.update(entity_todo);
+            adapter.notifyItemChanged(postion);
+        }
+    }
+
 }

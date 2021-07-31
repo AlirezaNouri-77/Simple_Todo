@@ -1,4 +1,4 @@
-package com.example.simple_todo.database;
+package com.example.simple_todo.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -23,13 +23,13 @@ public interface Todo_Dao {
     @Insert
     void insert (Entity_Todo entity_todo);
 
-    @Query("DELETE FROM todo_table")
-    void deleteall();
+    @Query("DELETE FROM todo_table WHERE Code = :text")
+    void deleteall(String text);
 
-    @Query("SELECT * FROM todo_table ORDER BY isfinish ASC")
-    LiveData<List<Entity_Todo>> getall();
+//    @Query("SELECT * FROM todo_table ORDER BY isfinish ASC")
+//    List<Entity_Todo> getall();
 
-    @Query("SELECT * FROM todo_table WHERE todo LIKE :text ")
+    @Query("SELECT * FROM todo_table WHERE Code = :text ORDER BY isfinish ASC")
     LiveData<List<Entity_Todo>> search(String text);
 
 }
