@@ -7,13 +7,12 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 import com.example.simple_todo.dao.Todo_Dao;
-import com.example.simple_todo.model.Entity_Todo;
+import com.example.simple_todo.model.Todo_Model;
 
-@Database(entities = Entity_Todo.class, version = 2)
+@Database(entities = Todo_Model.class, version = 2)
 public abstract class Room_Database extends RoomDatabase {
 
     public abstract Todo_Dao todo_dao();
-
     private static Room_Database instance;
 
     public static synchronized Room_Database getInstance(Context context) {

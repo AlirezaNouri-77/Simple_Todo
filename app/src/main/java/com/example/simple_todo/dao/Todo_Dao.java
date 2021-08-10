@@ -7,7 +7,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.example.simple_todo.model.Entity_Todo;
+import com.example.simple_todo.model.Todo_Model;
 
 import java.util.List;
 
@@ -15,21 +15,21 @@ import java.util.List;
 public interface Todo_Dao {
 
     @Update
-    void update (Entity_Todo entity_todo);
+    void update (Todo_Model todo_model);
 
     @Delete
-    void delete (Entity_Todo entity_todo);
+    void delete (Todo_Model todo_model);
 
     @Insert
-    void insert (Entity_Todo entity_todo);
+    void insert (Todo_Model todo_model);
 
     @Query("DELETE FROM todo_table WHERE Code = :text")
     void deleteall(String text);
 
-//    @Query("SELECT * FROM todo_table ORDER BY isfinish ASC")
-//    List<Entity_Todo> getall();
+    @Query("SELECT * FROM todo_table ORDER BY isfinish ASC")
+    LiveData<List<Todo_Model>> getall();
 
     @Query("SELECT * FROM todo_table WHERE Code = :text ORDER BY isfinish ASC")
-    LiveData<List<Entity_Todo>> search(String text);
+    LiveData<List<Todo_Model>> search(String text);
 
 }

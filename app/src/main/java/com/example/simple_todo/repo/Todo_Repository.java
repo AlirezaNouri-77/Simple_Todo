@@ -2,6 +2,8 @@ package com.example.simple_todo.repo;
 
 import android.app.Application;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.annotation.MainThread;
 import androidx.annotation.WorkerThread;
@@ -9,50 +11,54 @@ import androidx.lifecycle.LiveData;
 
 import com.example.simple_todo.dao.Todo_Dao;
 import com.example.simple_todo.database.Room_Database;
-import com.example.simple_todo.model.Entity_Todo;
+import com.example.simple_todo.model.Todo_Model;
 
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
-public class Todo_Repo {
+public class Todo_Repository {
 
     private final Todo_Dao todo_dao;
-  //  private final List<Entity_Todo> alltodo;
+    private final LiveData<List<Todo_Model>> alltodo;
 
-    public Todo_Repo(Application application) {
+    public Todo_Repository(Application application) {
         Room_Database room_database = Room_Database.getInstance(application);
         todo_dao = room_database.todo_dao();
-        //alltodo = todo_dao.getall();
+        alltodo = todo_dao.getall();
     }
 
     @MainThread
-    public LiveData<List<Entity_Todo>> searchitem (String text){
+    public LiveData<List<Todo_Model>> searchitem(String text) {
         return todo_dao.search(text);
     }
 
     @WorkerThread
-    public void delete (String text){ todo_dao.deleteall(text);}
-
-    public void insert(Entity_Todo entity_todo) {
-        new inserttodo(todo_dao).execute(entity_todo);
+    public void delete(String text) {
+        todo_dao.deleteall(text);
     }
 
-    public void update(Entity_Todo entity_todo) {
-        new update(todo_dao).execute(entity_todo);
+    public void insert(Todo_Model _todoModel) {
+        new inserttodo(todo_dao).execute(_todoModel);
+    }
+
+    public void update(Todo_Model _todoModel) {
+        new update(todo_dao).execute(_todoModel);
     }
 
 //    public void deleteall() {
 //        new deleteall(todo_dao).execute();
 //    }
 
-    public void deleteitem(Entity_Todo entity_todo) {
-        new deleteitem(todo_dao).execute(entity_todo);
+    public void deleteitem(Todo_Model _todoModel) {
+        new deleteitem(todo_dao).execute(_todoModel);
     }
 
-//    public List<Entity_Todo> getall() {
-//        return alltodo;
-//    }
+    public LiveData<List<Todo_Model>> getall() {
+        return alltodo;
+    }
 
-    private static class inserttodo extends AsyncTask<Entity_Todo, Void, Void> {
+    private static class inserttodo extends AsyncTask<Todo_Model, Void, Void> {
         private final Todo_Dao todo_dao;
 
         private inserttodo(Todo_Dao todo_dao) {
@@ -60,8 +66,8 @@ public class Todo_Repo {
         }
 
         @Override
-        protected Void doInBackground(Entity_Todo... entity_todos) {
-            todo_dao.insert(entity_todos[0]);
+        protected Void doInBackground(Todo_Model... _todoModels) {
+            todo_dao.insert(_todoModels[0]);
             return null;
         }
     }
@@ -80,7 +86,7 @@ public class Todo_Repo {
 //        }
 //    }
 
-    private static class update extends AsyncTask<Entity_Todo, Void, Void> {
+    private static class update extends AsyncTask<Todo_Model, Void, Void> {
         private final Todo_Dao todo_dao;
 
         private update(Todo_Dao todo_dao) {
@@ -88,13 +94,13 @@ public class Todo_Repo {
         }
 
         @Override
-        protected Void doInBackground(Entity_Todo... entity_todos) {
-            todo_dao.update(entity_todos[0]);
+        protected Void doInBackground(Todo_Model... _todoModels) {
+            todo_dao.update(_todoModels[0]);
             return null;
         }
     }
 
-    private static class deleteitem extends AsyncTask<Entity_Todo, Void, Void> {
+    private static class deleteitem extends AsyncTask<Todo_Model, Void, Void> {
         private final Todo_Dao todo_dao;
 
         private deleteitem(Todo_Dao todo_dao) {
@@ -102,8 +108,8 @@ public class Todo_Repo {
         }
 
         @Override
-        protected Void doInBackground(Entity_Todo... entity_todos) {
-            todo_dao.delete(entity_todos[0]);
+        protected Void doInBackground(Todo_Model... _todoModels) {
+            todo_dao.delete(_todoModels[0]);
             return null;
         }
     }

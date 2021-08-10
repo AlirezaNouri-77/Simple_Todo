@@ -4,12 +4,16 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.room.ColumnInfo;
-import androidx.room.Dao;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "category")
-public class category_model implements Parcelable {
+@Entity(tableName = "category_table")
+public class Category_Model implements Parcelable {
+
+    public Category_Model(String category, int quntity) {
+        this.category = category;
+        this.quntity = quntity;
+    }
 
     @PrimaryKey(autoGenerate = true)
     int id;
@@ -45,23 +49,23 @@ public class category_model implements Parcelable {
     }
 
 
-    public category_model() {}
+    public Category_Model() {}
 
-    public category_model(Parcel in) {
+    public Category_Model(Parcel in) {
         id = in.readInt();
         category = in.readString();
         quntity = in.readInt();
     }
 
-    public static final Creator<category_model> CREATOR = new Creator<category_model>() {
+    public static final Creator<Category_Model> CREATOR = new Creator<Category_Model>() {
         @Override
-        public category_model createFromParcel(Parcel in) {
-            return new category_model(in);
+        public Category_Model createFromParcel(Parcel in) {
+            return new Category_Model(in);
         }
 
         @Override
-        public category_model[] newArray(int size) {
-            return new category_model[size];
+        public Category_Model[] newArray(int size) {
+            return new Category_Model[size];
         }
     };
 

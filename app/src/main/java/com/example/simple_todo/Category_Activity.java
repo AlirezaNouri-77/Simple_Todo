@@ -3,7 +3,6 @@ package com.example.simple_todo;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,30 +11,29 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.simple_todo.model.category_model;
+import com.example.simple_todo.model.Category_Model;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.simple_todo.Adapter.category_recyclerview;
-import com.example.simple_todo.viewmodel.category_viewmodel;
+import com.example.simple_todo.Adapter.Category_Recyclerview_Adapter;
+import com.example.simple_todo.viewmodel.Category_Viewmodel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class category extends AppCompatActivity implements category_recyclerview.Onitemclick {
+public class Category_Activity extends AppCompatActivity implements Category_Recyclerview_Adapter.Onitemclick {
 
     TextView title_dialog;
     EditText edittext_dialog;
     Button add_dialog_button;
 
-    List<category_model> mlist = new ArrayList<>();
-    category_recyclerview category_recyclerview;
+    List<Category_Model> mlist = new ArrayList<>();
+    Category_Recyclerview_Adapter Category_Recyclerview_Adapter;
 
     Dialog add_category_dialog;
 
@@ -54,25 +52,25 @@ public class category extends AppCompatActivity implements category_recyclerview
         add_category_dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         add_category_dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        category_recyclerview = new category_recyclerview((com.example.simple_todo.Adapter.category_recyclerview.Onitemclick) this);
+        Category_Recyclerview_Adapter = new Category_Recyclerview_Adapter((Category_Recyclerview_Adapter.Onitemclick) this);
         RecyclerView recyclerView = findViewById(R.id.category_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(category_recyclerview);
+        recyclerView.setAdapter(Category_Recyclerview_Adapter);
 
 
-        category_viewmodel category_viewmodel = new ViewModelProvider(this).get(category_viewmodel.class);
+        Category_Viewmodel category_viewmodel = new ViewModelProvider(this).get(Category_Viewmodel.class);
 
-        category_viewmodel.getallcategory().observe(this, new Observer<List<category_model>>() {
+        category_viewmodel.getallcategory().observe(this, new Observer<List<Category_Model>>() {
             @Override
-            public void onChanged(List<category_model> category_models) {
-                category_recyclerview.submitList(category_models);
+            public void onChanged(List<Category_Model> Category_Models) {
+                Category_Recyclerview_Adapter.submitList(Category_Models);
             }
         });
 
         actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                category_model category_model = new category_model();
+                Category_Model category_model = new Category_Model();
                 title_dialog.setText("Enter new category");
                 add_dialog_button.setText("Add");
                 add_category_dialog.show();
@@ -89,10 +87,10 @@ public class category extends AppCompatActivity implements category_recyclerview
 
     @Override
     public void onclick(int postion) {
-        Intent intent = new Intent(category.this, MainActivity.class);
-        mlist = category_recyclerview.getCurrentList();
-        category_model category_model = mlist.get(postion);
+        Intent intent = new Intent(Category_Activity.this, MainActivity.class);
+        mlist = Category_Recyclerview_Adapter.getCurrentList();
+        Category_Model category_model = mlist.get(postion);
         intent.putExtra("ss" , category_model);
-        category.this.startActivity(intent);
+        Category_Activity.this.startActivity(intent);
     }
 }

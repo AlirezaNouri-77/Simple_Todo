@@ -5,10 +5,5 @@
         android:id="@+id/deleteall"
         android:icon="@drawable/ic_baseline_delete_24"
         android:title="Delete All Todo" />
-    <item
-        android:title="Search"
-        android:id="@+id/search"
-        android:icon="@android:drawable/ic_menu_search"
-        app:showAsAction="always"
-        app:actionViewClass="androidx.appcompat.widget.SearchView" />
+
 </menu>

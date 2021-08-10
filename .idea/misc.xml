@@ -5,12 +5,13 @@
       <map>
         <entry key="..\:/Users/Alireza/Desktop/Simple_Todo/app/src/main/res/drawable/ic_twotone_close_24.xml" value="0.2703125" />
         <entry key="..\:/Users/Alireza/Desktop/Simple_Todo/app/src/main/res/drawable/ic_twotone_done_24.xml" value="0.2703125" />
-        <entry key="..\:/Users/Alireza/Desktop/Simple_Todo/app/src/main/res/layout/activity_category.xml" value="0.152" />
-        <entry key="..\:/Users/Alireza/Desktop/Simple_Todo/app/src/main/res/layout/activity_main.xml" value="0.16799999999999998" />
+        <entry key="..\:/Users/Alireza/Desktop/Simple_Todo/app/src/main/res/layout/activity_category.xml" value="0.264" />
+        <entry key="..\:/Users/Alireza/Desktop/Simple_Todo/app/src/main/res/layout/activity_main.xml" value="0.264" />
         <entry key="..\:/Users/Alireza/Desktop/Simple_Todo/app/src/main/res/layout/add_dialog.xml" value="0.23233695652173914" />
         <entry key="..\:/Users/Alireza/Desktop/Simple_Todo/app/src/main/res/layout/add_dialog_mainactivity.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Alireza/Desktop/Simple_Todo/app/src/main/res/layout/category_recyclerview.xml" value="0.2938388625592417" />
-        <entry key="..\:/Users/Alireza/Desktop/Simple_Todo/app/src/main/res/layout/recyclerview_layout.xml" value="0.2938388625592417" />
+        <entry key="..\:/Users/Alireza/Desktop/Simple_Todo/app/src/main/res/layout/recyclerview_layout.xml" value="0.6" />
+        <entry key="..\:/Users/Alireza/Desktop/Simple_Todo/app/src/main/res/menu/menu.xml" value="0.25416666666666665" />
       </map>
     </option>
   </component>

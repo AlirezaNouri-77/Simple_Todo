@@ -5,7 +5,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "todo_table")
-public class Entity_Todo {
+public class Todo_Model {
 
     @ColumnInfo
     String todo;

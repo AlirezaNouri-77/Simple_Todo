@@ -11,30 +11,26 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.simple_todo.R;
-import com.example.simple_todo.model.Entity_Todo;
-import com.example.simple_todo.model.category_model;
+import com.example.simple_todo.model.Category_Model;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class category_recyclerview extends ListAdapter< category_model, category_recyclerview.category_viewholder> {
+public class Category_Recyclerview_Adapter extends ListAdapter<Category_Model, Category_Recyclerview_Adapter.category_viewholder> {
 
     Onitemclick onitemclick;
 
-    public category_recyclerview(Onitemclick onitemclick) {
+    public Category_Recyclerview_Adapter(Onitemclick onitemclick) {
         super(diffCallback);
         this.onitemclick = onitemclick;
     }
-    private static final DiffUtil.ItemCallback<category_model> diffCallback = new DiffUtil.ItemCallback<category_model>() {
+    private static final DiffUtil.ItemCallback<Category_Model> diffCallback = new DiffUtil.ItemCallback<Category_Model>() {
         @Override
-        public boolean areItemsTheSame(@NonNull @NotNull category_model oldItem, @NonNull @NotNull category_model newItem) {
+        public boolean areItemsTheSame(@NonNull @NotNull Category_Model oldItem, @NonNull @NotNull Category_Model newItem) {
             return oldItem.getId() == newItem.getId();
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull @NotNull category_model oldItem, @NonNull @NotNull category_model newItem) {
+        public boolean areContentsTheSame(@NonNull @NotNull Category_Model oldItem, @NonNull @NotNull Category_Model newItem) {
             return oldItem.getCategory().equals(newItem.getCategory()) && oldItem.getQuntity() == newItem.getQuntity();
         }
     };
@@ -50,9 +46,13 @@ public class category_recyclerview extends ListAdapter< category_model, category
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull category_viewholder holder, int position) {
-        category_model category_model = getItem(position);
-        holder.category.setText(category_model.getCategory());
-        holder.quntity.setText(category_model.getQuntity()+" Todo");
+      //  Category_Model category_model = getItem(position);
+        holder.category.setText(getItem(position).getCategory());
+        if(getItem(position).getCategory().equals("All")){
+            holder.quntity.setText("");
+        }else {
+            holder.quntity.setText(getItem(position).getQuntity()+" Todo");
+        }
     }
 
     public static class category_viewholder extends RecyclerView.ViewHolder implements View.OnClickListener {
