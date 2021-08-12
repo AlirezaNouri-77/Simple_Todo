@@ -32,7 +32,9 @@ public class Category_Viewmodel extends AndroidViewModel {
     public void insert (Category_Model category_model){
         Category_Repository.insert(category_model);
     }
+
     public void update (Category_Model category_model){
         Category_Repository.update(category_model);
     }
+
 }

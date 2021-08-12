@@ -99,21 +99,22 @@ public class Todo_Recyclerview_Adapter extends ListAdapter<Todo_Model, Todo_Recy
         public void onClick(View v) {
 
             if (v == itemView) {
-                onitemclick.onclick(getAdapterPosition());
+                onitemclick.ClickonRecyclerViewItem(getAdapterPosition());
             } else if (v == delete) {
-                onitemclick.delete(getAdapterPosition());
+                onitemclick.DeleteItemRecyclerView(getAdapterPosition());
             } else if (v == imageView) {
-                onitemclick.dene_or_not(getAdapterPosition());
+                onitemclick.DoneOrNot(getAdapterPosition());
             }
 
         }
     }
 
     public interface Onitemclick {
-        void onclick(int postion);
 
-        void delete(int postion);
+        void ClickonRecyclerViewItem(int postion);
 
-        void dene_or_not(int postion);
+        void DeleteItemRecyclerView(int postion);
+
+        void DoneOrNot(int postion);
     }
 }

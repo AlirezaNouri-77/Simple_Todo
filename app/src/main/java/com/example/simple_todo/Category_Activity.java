@@ -87,10 +87,12 @@ public class Category_Activity extends AppCompatActivity implements Category_Rec
 
     @Override
     public void onclick(int postion) {
+
         Intent intent = new Intent(Category_Activity.this, MainActivity.class);
         mlist = Category_Recyclerview_Adapter.getCurrentList();
         Category_Model category_model = mlist.get(postion);
-        intent.putExtra("ss" , category_model);
+        intent.putExtra("Category_Code" , category_model);
         Category_Activity.this.startActivity(intent);
+
     }
 }

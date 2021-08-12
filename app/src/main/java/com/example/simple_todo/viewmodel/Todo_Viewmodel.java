@@ -5,6 +5,8 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 
 import com.example.simple_todo.dao.Todo_Dao;
 import com.example.simple_todo.model.Todo_Model;
@@ -17,8 +19,7 @@ import java.util.List;
 public class Todo_Viewmodel extends AndroidViewModel {
 
     private final Todo_Repository todo_repository;
-    Todo_Dao todo_dao;
-    private final LiveData<List<Todo_Model>> alltodo;
+    private LiveData<List<Todo_Model>> alltodo;
 
     public Todo_Viewmodel(@NonNull @NotNull Application application) {
         super(application);
