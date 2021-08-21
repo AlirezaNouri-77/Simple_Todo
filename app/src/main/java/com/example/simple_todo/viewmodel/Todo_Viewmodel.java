@@ -6,9 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
 
-import com.example.simple_todo.dao.Todo_Dao;
 import com.example.simple_todo.model.Todo_Model;
 import com.example.simple_todo.repo.Todo_Repository;
 
@@ -19,7 +17,10 @@ import java.util.List;
 public class Todo_Viewmodel extends AndroidViewModel {
 
     private final Todo_Repository todo_repository;
-    private LiveData<List<Todo_Model>> alltodo;
+    private final LiveData<List<Todo_Model>> alltodo;
+
+    MutableLiveData<List<Todo_Model>> search = new MutableLiveData<>();
+
 
     public Todo_Viewmodel(@NonNull @NotNull Application application) {
         super(application);
@@ -27,12 +28,10 @@ public class Todo_Viewmodel extends AndroidViewModel {
         alltodo = todo_repository.getall();
     }
 
+    public void deleteall(){todo_repository.deleteall();}
+
     public void insert(Todo_Model todoModel) {
         todo_repository.insert(todoModel);
-    }
-
-    public void deleteall(String text) {
-        todo_repository.delete(text);
     }
 
     public void update(Todo_Model todoModel) {
@@ -43,8 +42,8 @@ public class Todo_Viewmodel extends AndroidViewModel {
         todo_repository.deleteitem(todoModel);
     }
 
-    public LiveData<List<Todo_Model>> searchitem (String text) {
-        return todo_repository.searchitem(text);
+    public LiveData<List<Todo_Model>> searchitem (String text , String searchview) {
+        return todo_repository.get_all_todo_bycategory(text , searchview);
     }
 
     public LiveData<List<Todo_Model>> getAlltodo() {

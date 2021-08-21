@@ -23,19 +23,21 @@
         android:clickable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        app:srcCompat="@android:drawable/ic_input_add"
+        android:contentDescription="Enter new Category" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
-        android:gravity="left|center"
-        android:paddingLeft="10dp"
         android:layout_height="0dp"
+        android:background="@drawable/gradeint"
+        android:gravity="start|center"
+        android:paddingStart="20dp"
         android:text="List"
+        android:fontFamily="@font/baloo"
         android:textColor="@color/white"
-        android:background="#455a64"
+        android:textSize="40sp"
         android:textStyle="bold"
-        android:textSize="32dp"
         app:layout_constraintBottom_toTopOf="@+id/category_rv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

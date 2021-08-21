@@ -46,7 +46,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:gravity="center|left"
-        android:background="#455a64"
+        android:background="@drawable/gradeint"
         android:paddingLeft="10dp"
         android:text="TextView"
         android:textColor="@color/white"

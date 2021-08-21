@@ -28,6 +28,9 @@ public interface Category_Dao {
     LiveData<List<Category_Model>> getall();
 
     @Query("UPDATE category_table SET quntity=quntity-1 WHERE category =:newcategory ")
-            void update_quntinty( String newcategory);
+    void update_quntinty(String newcategory);
+
+    @Query("UPDATE category_table SET quntity=0")
+    void setzerotoquntity();
 
 }

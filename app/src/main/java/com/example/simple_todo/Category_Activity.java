@@ -11,11 +11,13 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.simple_todo.model.Category_Model;
 
@@ -23,6 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.simple_todo.Adapter.Category_Recyclerview_Adapter;
+import com.example.simple_todo.repo.Category_Repository;
+import com.example.simple_todo.repo.Todo_Repository;
 import com.example.simple_todo.viewmodel.Category_Viewmodel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -36,6 +40,9 @@ public class Category_Activity extends AppCompatActivity implements Category_Rec
     Category_Recyclerview_Adapter Category_Recyclerview_Adapter;
 
     Dialog add_category_dialog;
+
+    Category_Viewmodel category_viewmodel;
+    Todo_Repository todo_repository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +65,8 @@ public class Category_Activity extends AppCompatActivity implements Category_Rec
         recyclerView.setAdapter(Category_Recyclerview_Adapter);
 
 
-        Category_Viewmodel category_viewmodel = new ViewModelProvider(this).get(Category_Viewmodel.class);
+        category_viewmodel = new ViewModelProvider(this).get(Category_Viewmodel.class);
+        todo_repository = new Todo_Repository(getApplication());
 
         category_viewmodel.getallcategory().observe(this, new Observer<List<Category_Model>>() {
             @Override
@@ -95,4 +103,18 @@ public class Category_Activity extends AppCompatActivity implements Category_Rec
         Category_Activity.this.startActivity(intent);
 
     }
+
+    @Override
+    public void onlongitem(int postion) {
+
+        mlist = Category_Recyclerview_Adapter.getCurrentList();
+        Category_Model category_model = mlist.get(postion);
+        if(category_model.getCategory().equals("All")){
+            return;
+        }else {
+            category_viewmodel.delete(category_model);
+            todo_repository.delete_all_bycode(category_model.getCategory());
+        }
+    }
+
 }

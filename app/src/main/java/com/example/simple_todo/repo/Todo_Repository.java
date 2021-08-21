@@ -2,25 +2,21 @@ package com.example.simple_todo.repo;
 
 import android.app.Application;
 import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Looper;
 
 import androidx.annotation.MainThread;
-import androidx.annotation.WorkerThread;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.example.simple_todo.dao.Todo_Dao;
 import com.example.simple_todo.database.Room_Database;
 import com.example.simple_todo.model.Todo_Model;
 
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 public class Todo_Repository {
 
     private final Todo_Dao todo_dao;
-    private final LiveData<List<Todo_Model>> alltodo;
+    private LiveData<List<Todo_Model>> alltodo;
 
     public Todo_Repository(Application application) {
         Room_Database room_database = Room_Database.getInstance(application);
@@ -29,39 +25,54 @@ public class Todo_Repository {
     }
 
     @MainThread
-    public LiveData<List<Todo_Model>> searchitem(String text) {
-        return todo_dao.search(text);
+    public LiveData<List<Todo_Model>> get_all_todo_bycategory(String text , String searchtext) {
+        return todo_dao.get_all_todo_bycategory(text , searchtext);
     }
 
-    @WorkerThread
-    public void delete(String text) {
-        todo_dao.deleteall(text);
+    public void delete_all_bycode (String Code){
+        new delete_all_bycode(todo_dao , Code).execute();
     }
 
     public void insert(Todo_Model _todoModel) {
-        new inserttodo(todo_dao).execute(_todoModel);
+        new insert_new_todo(todo_dao).execute(_todoModel);
     }
 
     public void update(Todo_Model _todoModel) {
         new update(todo_dao).execute(_todoModel);
     }
 
-//    public void deleteall() {
-//        new deleteall(todo_dao).execute();
-//    }
+    public void deleteall() {
+        new delete_all(todo_dao).execute();
+    }
 
     public void deleteitem(Todo_Model _todoModel) {
-        new deleteitem(todo_dao).execute(_todoModel);
+        new delete_an_item(todo_dao).execute(_todoModel);
     }
 
     public LiveData<List<Todo_Model>> getall() {
         return alltodo;
     }
 
-    private static class inserttodo extends AsyncTask<Todo_Model, Void, Void> {
+    private static class delete_all_bycode extends AsyncTask<Void, Void, Void> {
+        private final Todo_Dao todo_dao;
+        private final String Code;
+
+        private delete_all_bycode(Todo_Dao todo_dao , String Code) {
+            this.todo_dao = todo_dao;
+            this.Code = Code;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            todo_dao.deleteanitem(Code);
+            return null;
+        }
+    }
+
+    private static class insert_new_todo extends AsyncTask<Todo_Model, Void, Void> {
         private final Todo_Dao todo_dao;
 
-        private inserttodo(Todo_Dao todo_dao) {
+        private insert_new_todo(Todo_Dao todo_dao) {
             this.todo_dao = todo_dao;
         }
 
@@ -72,19 +83,19 @@ public class Todo_Repository {
         }
     }
 
-//    private static class deleteall extends AsyncTask<String, Void, Void> {
-//        private final Todo_Dao todo_dao;
-//
-//        private deleteall(Todo_Dao todo_dao) {
-//            this.todo_dao = todo_dao;
-//        }
-//
-//        @Override
-//        protected Void doInBackground(String... strings) {
-//            todo_dao.deleteall(strings[0]);
-//            return null;
-//        }
-//    }
+    private static class delete_all extends AsyncTask<Void , Void , Void >{
+        private final Todo_Dao todo_dao;
+
+        private delete_all(Todo_Dao todo_dao){
+            this.todo_dao = todo_dao;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            todo_dao.deletealltodo();
+            return null;
+        }
+    }
 
     private static class update extends AsyncTask<Todo_Model, Void, Void> {
         private final Todo_Dao todo_dao;
@@ -100,10 +111,10 @@ public class Todo_Repository {
         }
     }
 
-    private static class deleteitem extends AsyncTask<Todo_Model, Void, Void> {
+    private static class delete_an_item extends AsyncTask<Todo_Model, Void, Void> {
         private final Todo_Dao todo_dao;
 
-        private deleteitem(Todo_Dao todo_dao) {
+        private delete_an_item(Todo_Dao todo_dao) {
             this.todo_dao = todo_dao;
         }
 
