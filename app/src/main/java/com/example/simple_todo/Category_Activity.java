@@ -32,17 +32,17 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class Category_Activity extends AppCompatActivity implements Category_Recyclerview_Adapter.Onitemclick {
 
-    TextView title_dialog;
-    EditText edittext_dialog;
-    Button add_dialog_button;
+    private TextView title_dialog;
+    private EditText edittext_dialog;
+    private Button add_dialog_button;
 
-    List<Category_Model> mlist = new ArrayList<>();
-    Category_Recyclerview_Adapter Category_Recyclerview_Adapter;
+    private List<Category_Model> mlist = new ArrayList<>();
+    private Category_Recyclerview_Adapter Category_Recyclerview_Adapter;
 
-    Dialog add_category_dialog;
+    private Dialog add_category_dialog;
 
-    Category_Viewmodel category_viewmodel;
-    Todo_Repository todo_repository;
+    private Category_Viewmodel category_viewmodel;
+    private Todo_Repository todo_repository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +55,7 @@ public class Category_Activity extends AppCompatActivity implements Category_Rec
         add_category_dialog.setContentView(R.layout.add_dialog);
         title_dialog = add_category_dialog.findViewById(R.id.textView3);
         edittext_dialog = add_category_dialog.findViewById(R.id.editTextTextPersonName);
-        add_dialog_button =add_category_dialog.findViewById(R.id.button);
+        add_dialog_button = add_category_dialog.findViewById(R.id.button);
         add_category_dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         add_category_dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
@@ -64,11 +64,10 @@ public class Category_Activity extends AppCompatActivity implements Category_Rec
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(Category_Recyclerview_Adapter);
 
-
         category_viewmodel = new ViewModelProvider(this).get(Category_Viewmodel.class);
         todo_repository = new Todo_Repository(getApplication());
 
-        category_viewmodel.getallcategory().observe(this, new Observer<List<Category_Model>>() {
+        category_viewmodel.getallcategory().observe(this , new Observer<List<Category_Model>>() {
             @Override
             public void onChanged(List<Category_Model> Category_Models) {
                 Category_Recyclerview_Adapter.submitList(Category_Models);
@@ -99,7 +98,7 @@ public class Category_Activity extends AppCompatActivity implements Category_Rec
         Intent intent = new Intent(Category_Activity.this, MainActivity.class);
         mlist = Category_Recyclerview_Adapter.getCurrentList();
         Category_Model category_model = mlist.get(postion);
-        intent.putExtra("Category_Code" , category_model);
+        intent.putExtra("Category_Code", category_model);
         Category_Activity.this.startActivity(intent);
 
     }
@@ -109,9 +108,9 @@ public class Category_Activity extends AppCompatActivity implements Category_Rec
 
         mlist = Category_Recyclerview_Adapter.getCurrentList();
         Category_Model category_model = mlist.get(postion);
-        if(category_model.getCategory().equals("All")){
+        if (category_model.getCategory().equals("All")) {
             return;
-        }else {
+        } else {
             category_viewmodel.delete(category_model);
             todo_repository.delete_all_bycode(category_model.getCategory());
         }

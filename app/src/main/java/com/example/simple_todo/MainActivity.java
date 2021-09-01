@@ -13,7 +13,6 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -94,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements Todo_Recyclerview
             });
         } else {
 
-            get("");
+            gettodos("");
 
         }
 
@@ -156,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements Todo_Recyclerview
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                get(newText);
+                gettodos(newText);
                 return true;
             }
         });
@@ -178,7 +177,6 @@ public class MainActivity extends AppCompatActivity implements Todo_Recyclerview
                     Category_Repository.update_quntity_to_zero();
                 } else {
                     todo_repository.delete_all_bycode(category_model.getCategory());
-                  //  Category_Repository.set;
                 }
 
             });
@@ -244,7 +242,7 @@ public class MainActivity extends AppCompatActivity implements Todo_Recyclerview
 
     }
 
-    public void get (String search){
+    public void gettodos(String search){
         todo_viewmodel.searchitem(category_model.getCategory() , search).observe(this, new Observer<List<Todo_Model>>() {
             @Override
             public void onChanged(List<Todo_Model> todo_models) {
@@ -259,7 +257,6 @@ public class MainActivity extends AppCompatActivity implements Todo_Recyclerview
                     recyclerView.setVisibility(View.VISIBLE);
                     empty.setVisibility(View.GONE);
                 }
-
             }
         });
     }

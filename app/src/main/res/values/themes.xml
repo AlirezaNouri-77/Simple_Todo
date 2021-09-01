@@ -2,9 +2,9 @@
     <!-- Base application theme. -->
     <style name="Theme.Simple_Todo" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">#6dd5ed</item>
+        <item name="colorPrimary">#0F2027</item>
 <!--        <item name="colorPrimary">@color/purple_500</item>-->
-        <item name="colorPrimaryVariant">#6dd5ed</item>
+        <item name="colorPrimaryVariant">#0F2027</item>
 <!--        <item name="colorPrimaryVariant">@color/purple_700</item>-->
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->

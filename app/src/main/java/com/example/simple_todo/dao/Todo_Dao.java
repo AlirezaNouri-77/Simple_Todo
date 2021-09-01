@@ -25,15 +25,15 @@ public interface Todo_Dao {
     void insert (Todo_Model todo_model);
 
     @Query("DELETE FROM todo_table WHERE Code = :text")
-    void deleteanitem(String text);
+    void deleteanitem( String text );
 
-    @Query("DELETE FROM todo_table ")
+    @Query("DELETE FROM todo_table")
     void deletealltodo();
 
     @Query("SELECT * FROM todo_table ORDER BY isfinish ASC")
     LiveData<List<Todo_Model>> getall();
 
     @Query("SELECT * FROM todo_table WHERE Code = :text AND todo LIKE '%' || :searchtext || '%' ORDER BY isfinish ASC")
-    LiveData<List<Todo_Model>> get_all_todo_bycategory(String text , String searchtext);
+    LiveData<List<Todo_Model>> get_all_todo_bycategory( String text , String searchtext );
 
 }

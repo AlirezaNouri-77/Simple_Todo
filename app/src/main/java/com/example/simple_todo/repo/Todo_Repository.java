@@ -4,6 +4,7 @@ import android.app.Application;
 import android.os.AsyncTask;
 
 import androidx.annotation.MainThread;
+import androidx.annotation.WorkerThread;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -16,7 +17,7 @@ import java.util.List;
 public class Todo_Repository {
 
     private final Todo_Dao todo_dao;
-    private LiveData<List<Todo_Model>> alltodo;
+    private final LiveData<List<Todo_Model>> alltodo;
 
     public Todo_Repository(Application application) {
         Room_Database room_database = Room_Database.getInstance(application);
@@ -24,8 +25,8 @@ public class Todo_Repository {
         alltodo = todo_dao.getall();
     }
 
-    @MainThread
-    public LiveData<List<Todo_Model>> get_all_todo_bycategory(String text , String searchtext) {
+    @WorkerThread
+    public LiveData<List<Todo_Model>> get_all_todo_bycategory( String text , String searchtext ) {
         return todo_dao.get_all_todo_bycategory(text , searchtext);
     }
 
@@ -33,12 +34,12 @@ public class Todo_Repository {
         new delete_all_bycode(todo_dao , Code).execute();
     }
 
-    public void insert(Todo_Model _todoModel) {
-        new insert_new_todo(todo_dao).execute(_todoModel);
+    public void insert(Todo_Model todo_model) {
+        new insert_new_todo(todo_dao).execute(todo_model);
     }
 
-    public void update(Todo_Model _todoModel) {
-        new update(todo_dao).execute(_todoModel);
+    public void update(Todo_Model todo_model) {
+        new update(todo_dao).execute(todo_model);
     }
 
     public void deleteall() {
@@ -63,7 +64,7 @@ public class Todo_Repository {
         }
 
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected Void doInBackground(Void ... voids) {
             todo_dao.deleteanitem(Code);
             return null;
         }
@@ -77,8 +78,8 @@ public class Todo_Repository {
         }
 
         @Override
-        protected Void doInBackground(Todo_Model... _todoModels) {
-            todo_dao.insert(_todoModels[0]);
+        protected Void doInBackground(Todo_Model ... todo_models) {
+            todo_dao.insert(todo_models[0]);
             return null;
         }
     }
@@ -124,6 +125,5 @@ public class Todo_Repository {
             return null;
         }
     }
-
 
 }

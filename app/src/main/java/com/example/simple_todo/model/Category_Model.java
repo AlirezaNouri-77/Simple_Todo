@@ -10,9 +10,9 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "category_table")
 public class Category_Model implements Parcelable {
 
-    public Category_Model(String category, int quntity) {
+    public Category_Model(String category, int quantity) {
         this.category = category;
-        this.quntity = quntity;
+        this.quntity = quantity;
     }
 
     @PrimaryKey(autoGenerate = true)

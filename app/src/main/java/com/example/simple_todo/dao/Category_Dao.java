@@ -23,11 +23,10 @@ public interface Category_Dao {
     @Insert
     void insert(Category_Model category_model);
 
-
     @Query("SELECT * FROM category_table")
     LiveData<List<Category_Model>> getall();
 
-    @Query("UPDATE category_table SET quntity=quntity-1 WHERE category =:newcategory ")
+    @Query("UPDATE category_table SET quntity = quntity - 1 WHERE category =:newcategory ")
     void update_quntinty(String newcategory);
 
     @Query("UPDATE category_table SET quntity=0")
