@@ -17,6 +17,7 @@
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton2"
         android:layout_width="wrap_content"
+        android:backgroundTint="#eeeeee"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
@@ -31,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@drawable/gradeint"
-        android:gravity="start|center"
+        android:gravity="left|center"
         android:paddingStart="20dp"
         android:text="List"
         android:fontFamily="@font/baloo"

@@ -2,6 +2,7 @@ package com.example.simple_todo.repo;
 
 import android.app.Application;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import androidx.annotation.WorkerThread;
 import androidx.lifecycle.LiveData;
@@ -40,7 +41,7 @@ public class Category_Repository {
     }
 
     public void update_quntity(String category) {
-        new update_quntity(category_dao , category).execute();
+        new update_quntity(category_dao, category).execute();
     }
 
     public void update(Category_Model category_model) {
@@ -50,10 +51,12 @@ public class Category_Repository {
     public static class delete extends AsyncTask<Category_Model, Void, Void> {
         private final Category_Dao category_dao;
 
-        public delete(Category_Dao category_dao) { this.category_dao = category_dao; }
+        public delete(Category_Dao category_dao) {
+            this.category_dao = category_dao;
+        }
 
         @Override
-        protected Void doInBackground(Category_Model ... category_models) {
+        protected Void doInBackground(Category_Model... category_models) {
             category_dao.delete(category_models[0]);
             return null;
         }
@@ -67,7 +70,7 @@ public class Category_Repository {
         }
 
         @Override
-        protected Void doInBackground(Category_Model ... Category_Models) {
+        protected Void doInBackground(Category_Model... Category_Models) {
             category_dao.insert(Category_Models[0]);
             return null;
         }
@@ -85,17 +88,47 @@ public class Category_Repository {
         }
     }
 
-    public static class update_quntity_tozero extends AsyncTask<Void, Void, Void> {
+//    public static class update implements Runnable {
+//        Category_Dao category_dao;
+//        Category_Model category_model;
+//
+//        public update(Category_Dao category_dao, Category_Model category_model) {
+//            this.category_dao = category_dao;
+//            this.category_model = category_model;
+//        }
+//
+//        @Override
+//        public void run() {
+//            category_dao.update(category_model);
+//        }
+//    }
+
+        public static class update_quntity_tozero extends AsyncTask<Void, Void, Void> {
         private final Category_Dao category_dao;
 
-        public update_quntity_tozero(Category_Dao category_dao) { this.category_dao = category_dao; }
+        public update_quntity_tozero(Category_Dao category_dao) {
+            this.category_dao = category_dao;
+        }
 
         @Override
-        protected Void doInBackground(Void ... voids) {
+        protected Void doInBackground(Void... voids) {
             category_dao.setzerotoquntity();
             return null;
         }
     }
+
+//    public static class update_0 implements Runnable {
+//        private Category_Dao category_dao;
+//
+//        public update_0(Category_Dao category_dao) {
+//            this.category_dao = category_dao;
+//        }
+//
+//        @Override
+//        public void run() {
+//            category_dao.setzerotoquntity();
+//        }
+//    }
 
     public static class add_default extends AsyncTask<Void, Void, Void> {
         private final Category_Dao category_dao;
@@ -105,7 +138,7 @@ public class Category_Repository {
         }
 
         @Override
-        protected Void doInBackground(Void ... voids) {
+        protected Void doInBackground(Void... voids) {
             category_dao.insert(new Category_Model("All", 0));
             return null;
         }
@@ -121,7 +154,7 @@ public class Category_Repository {
         }
 
         @Override
-        protected Void doInBackground(Void ... voids) {
+        protected Void doInBackground(Void... voids) {
             category_dao.update_quntinty(category);
             return null;
         }

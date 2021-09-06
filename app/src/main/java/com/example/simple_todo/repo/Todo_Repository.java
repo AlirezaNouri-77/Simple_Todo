@@ -8,8 +8,10 @@ import androidx.annotation.WorkerThread;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.simple_todo.dao.Category_Dao;
 import com.example.simple_todo.dao.Todo_Dao;
 import com.example.simple_todo.database.Room_Database;
+import com.example.simple_todo.model.Category_Model;
 import com.example.simple_todo.model.Todo_Model;
 
 import java.util.List;
@@ -17,17 +19,22 @@ import java.util.List;
 public class Todo_Repository {
 
     private final Todo_Dao todo_dao;
-    private final LiveData<List<Todo_Model>> alltodo;
+   // private LiveData<List<Todo_Model>> alltodo;
 
     public Todo_Repository(Application application) {
         Room_Database room_database = Room_Database.getInstance(application);
         todo_dao = room_database.todo_dao();
-        alltodo = todo_dao.getall();
+       // alltodo = todo_dao.getall();
     }
 
     @WorkerThread
     public LiveData<List<Todo_Model>> get_all_todo_bycategory( String text , String searchtext ) {
         return todo_dao.get_all_todo_bycategory(text , searchtext);
+    }
+
+    @WorkerThread
+    public LiveData<List<Todo_Model>> getall(String newsearch) {
+        return todo_dao.getall(newsearch);
     }
 
     public void delete_all_bycode (String Code){
@@ -50,9 +57,7 @@ public class Todo_Repository {
         new delete_an_item(todo_dao).execute(_todoModel);
     }
 
-    public LiveData<List<Todo_Model>> getall() {
-        return alltodo;
-    }
+
 
     private static class delete_all_bycode extends AsyncTask<Void, Void, Void> {
         private final Todo_Dao todo_dao;

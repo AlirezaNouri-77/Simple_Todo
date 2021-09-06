@@ -18,7 +18,7 @@ import java.util.List;
 public class Todo_Viewmodel extends AndroidViewModel {
 
     private final Todo_Repository todo_repository;
-    private final LiveData<List<Todo_Model>> alltodo;
+   // private final LiveData<List<Todo_Model>> alltodo;
 
     MutableLiveData<String> search = new MutableLiveData<>("");
 
@@ -26,7 +26,7 @@ public class Todo_Viewmodel extends AndroidViewModel {
     public Todo_Viewmodel(@NonNull @NotNull Application application) {
         super(application);
         todo_repository = new Todo_Repository(application);
-        alltodo = todo_repository.getall();
+       // alltodo = todo_repository.getall();
     }
 
     public void deleteall() {
@@ -52,13 +52,14 @@ public class Todo_Viewmodel extends AndroidViewModel {
         }else {
             search.setValue(searchview);
         }
+
      return Transformations.switchMap(search, String  -> todo_repository.get_all_todo_bycategory(text , search.getValue()));
 
     }
 
     // get all todos for all category
-    public LiveData<List<Todo_Model>> getAlltodo() {
-        return alltodo;
+    public LiveData<List<Todo_Model>> getAlltodo(String newsearch) {
+        return Transformations.switchMap(search , String -> todo_repository.getall(newsearch));
     }
 
 }

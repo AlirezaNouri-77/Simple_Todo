@@ -30,8 +30,8 @@ public interface Todo_Dao {
     @Query("DELETE FROM todo_table")
     void deletealltodo();
 
-    @Query("SELECT * FROM todo_table ORDER BY isfinish ASC")
-    LiveData<List<Todo_Model>> getall();
+    @Query("SELECT * FROM todo_table WHERE todo LIKE '%' || :newsearch || '%' ORDER BY isfinish ASC ")
+    LiveData<List<Todo_Model>> getall(String newsearch);
 
     @Query("SELECT * FROM todo_table WHERE Code = :text AND todo LIKE '%' || :searchtext || '%' ORDER BY isfinish ASC")
     LiveData<List<Todo_Model>> get_all_todo_bycategory( String text , String searchtext );

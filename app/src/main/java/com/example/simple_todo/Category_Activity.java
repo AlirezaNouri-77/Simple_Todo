@@ -6,7 +6,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -44,14 +48,15 @@ public class Category_Activity extends AppCompatActivity implements Category_Rec
     private Category_Viewmodel category_viewmodel;
     private Todo_Repository todo_repository;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category);
 
         FloatingActionButton actionButton = findViewById(R.id.floatingActionButton2);
-
         add_category_dialog = new Dialog(this);
+
         add_category_dialog.setContentView(R.layout.add_dialog);
         title_dialog = add_category_dialog.findViewById(R.id.textView3);
         edittext_dialog = add_category_dialog.findViewById(R.id.editTextTextPersonName);
@@ -75,6 +80,7 @@ public class Category_Activity extends AppCompatActivity implements Category_Rec
         });
 
         actionButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 Category_Model category_model = new Category_Model();
@@ -89,6 +95,7 @@ public class Category_Activity extends AppCompatActivity implements Category_Rec
                     }
                 });
             }
+
         });
     }
 
@@ -111,8 +118,23 @@ public class Category_Activity extends AppCompatActivity implements Category_Rec
         if (category_model.getCategory().equals("All")) {
             return;
         } else {
-            category_viewmodel.delete(category_model);
-            todo_repository.delete_all_bycode(category_model.getCategory());
+            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+            alertDialog.setTitle("Attention");
+            alertDialog.setMessage("Will delete " + category_model.getCategory() + " and all data in this category!");
+            alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    category_viewmodel.delete(category_model);
+                    todo_repository.delete_all_bycode(category_model.getCategory());
+                }
+            });
+            alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    alertDialog.dismiss();
+                }
+            });
+            alertDialog.show();
         }
     }
 

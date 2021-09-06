@@ -13,6 +13,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,7 +52,8 @@ public class MainActivity extends AppCompatActivity implements Todo_Recyclerview
     private Todo_Repository todo_repository;
 
     private List<Todo_Model> list_entity = new ArrayList<>();
-    // private List<Category_Model> category_list = new ArrayList<>();
+
+    FloatingActionButton floatingActionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements Todo_Recyclerview
 
         category_model = getIntent().getParcelableExtra("Category_Code");
 
-        FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
+        floatingActionButton = findViewById(R.id.floatingActionButton);
         recyclerView = findViewById(R.id.RV);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new Todo_Recyclerview_Adapter(this);
@@ -75,22 +77,9 @@ public class MainActivity extends AppCompatActivity implements Todo_Recyclerview
         todo_repository = new Todo_Repository(getApplication());
 
         if (category_model.getCategory().equals("All")) {
-            floatingActionButton.setVisibility(View.GONE);
-            todo_viewmodel.getAlltodo().observe(this, new Observer<List<Todo_Model>>() {
-                @Override
-                public void onChanged(List<Todo_Model> todo_models) {
-                    adapter.submitList(todo_models);
 
-                    if (todo_models.size() == 0) {
-                        empty.setText("List is Empty");
-                        recyclerView.setVisibility(View.GONE);
-                        empty.setVisibility(View.VISIBLE);
-                    } else {
-                        recyclerView.setVisibility(View.VISIBLE);
-                        empty.setVisibility(View.GONE);
-                    }
-                }
-            });
+            gettodo_all_categoty("");
+
         } else {
 
             gettodos("");
@@ -121,16 +110,17 @@ public class MainActivity extends AppCompatActivity implements Todo_Recyclerview
                     public void onClick(View v) {
 
                         if (!add.getText().toString().isEmpty()) {
+
                             Todo_Model todo_model = new Todo_Model();
                             String todo = add.getText().toString();
                             todo_model.setTodo(todo);
                             todo_model.setIsfinish(false);
-
                             todo_model.setCode(category_model.getCategory());
+                            todo_viewmodel.insert(todo_model);
 
                             category_model.setQuntity(category_model.getQuntity() + 1);
                             Category_Repository.update(category_model);
-                            todo_viewmodel.insert(todo_model);
+
                             add.getText().clear();
 
                         }
@@ -155,7 +145,11 @@ public class MainActivity extends AppCompatActivity implements Todo_Recyclerview
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                gettodos(newText);
+                if(category_model.getCategory().equals("All")){
+                    gettodo_all_categoty(newText);
+                }else {
+                    gettodos(newText);
+                }
                 return true;
             }
         });
@@ -180,6 +174,7 @@ public class MainActivity extends AppCompatActivity implements Todo_Recyclerview
                 }
 
             });
+
             alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "No", (dialog, which) -> alertDialog.dismiss());
             alertDialog.show();
         }
@@ -247,6 +242,26 @@ public class MainActivity extends AppCompatActivity implements Todo_Recyclerview
             @Override
             public void onChanged(List<Todo_Model> todo_models) {
 
+                adapter.submitList(todo_models);
+
+                if (todo_models.size() == 0) {
+                    empty.setText("List is Empty");
+                    recyclerView.setVisibility(View.GONE);
+                    empty.setVisibility(View.VISIBLE);
+                } else {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    empty.setVisibility(View.GONE);
+                }
+            }
+        });
+    }
+
+    public void gettodo_all_categoty (String newsearch){
+
+        floatingActionButton.setVisibility(View.GONE);
+        todo_viewmodel.getAlltodo(newsearch).observe(this, new Observer<List<Todo_Model>>() {
+            @Override
+            public void onChanged(List<Todo_Model> todo_models) {
                 adapter.submitList(todo_models);
 
                 if (todo_models.size() == 0) {
